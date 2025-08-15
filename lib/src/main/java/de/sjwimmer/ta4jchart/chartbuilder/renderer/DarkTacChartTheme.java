@@ -1,13 +1,13 @@
 package de.sjwimmer.ta4jchart.chartbuilder.renderer;
 
-import static org.jfree.chart.StandardChartTheme.createDarknessTheme;
-
-import javax.swing.UIManager;
-
+import com.formdev.flatlaf.FlatDarculaLaf;
 import org.jfree.chart.ChartTheme;
 import org.jfree.chart.JFreeChart;
 
-import com.formdev.flatlaf.FlatDarculaLaf;
+import javax.swing.*;
+import java.awt.*;
+
+import static org.jfree.chart.StandardChartTheme.createDarknessTheme;
 
 public class DarkTacChartTheme implements TacChartTheme {
 
@@ -24,8 +24,8 @@ public class DarkTacChartTheme implements TacChartTheme {
         ChartTheme darknessTheme = createDarknessTheme();
         darknessTheme.apply(chart);
         chart.setBorderVisible(false);
-        chart.setBackgroundPaint(UIManager.getColor("Panel.background"));
-        chart.getLegend().setBackgroundPaint(UIManager.getColor("Panel.background"));
+        chart.setBackgroundPaint(new Color(0x1E1E1E));
+        chart.getLegend().setBackgroundPaint(new Color(0x1E1E1E));
         applyChart(chart);
     }
 }
