@@ -15,6 +15,7 @@ public class IndicatorConfiguration<T> {
     private final Color color;
     private final Shape shape;
     private final boolean addToDataTable;
+    private final int plotIndex;
 
     public IndicatorConfiguration(Builder<T> builder) {
         this.plotType = builder.plotType;
@@ -24,6 +25,7 @@ public class IndicatorConfiguration<T> {
         this.shape = builder.shape;
         this.indicator = builder.indicator;
         this.addToDataTable = builder.addToDataTable;
+        this.plotIndex = builder.plotIndex;
     }
 
 
@@ -55,10 +57,15 @@ public class IndicatorConfiguration<T> {
         return addToDataTable;
     }
 
+    public int getPlotIndex() {
+        return this.plotIndex;
+    }
+
     public static class Builder<T> {
         private final Random random = new Random();
 
         private final Indicator<T> indicator;
+        private int plotIndex = 0;
         private String name;
         private Color color = new Color(random.nextInt(256), random.nextInt(256), random.nextInt(256));
         private PlotType plotType = PlotType.OVERLAY;
@@ -66,21 +73,21 @@ public class IndicatorConfiguration<T> {
         private boolean addToDataTable = true;
         private Shape shape = new Ellipse2D.Double(-2.0, -2.0, 4.0, 4.0);
 
-        public static<T> Builder<T> of(Indicator<T> indicator) {
+        public static <T> Builder<T> of(Indicator<T> indicator) {
             return new Builder<>(indicator);
         }
 
-        private Builder(Indicator<T> indicator){
+        private Builder(Indicator<T> indicator) {
             this.indicator = indicator;
             this.name = indicator.toString();
         }
 
-        public Builder<T> chartType(ChartType chartType){
+        public Builder<T> chartType(ChartType chartType) {
             this.chartType = chartType;
             return this;
         }
 
-        public Builder<T> plotType(PlotType plotType){
+        public Builder<T> plotType(PlotType plotType) {
             this.plotType = plotType;
             return this;
         }
@@ -102,6 +109,11 @@ public class IndicatorConfiguration<T> {
 
         public Builder<T> notInTable() {
             this.addToDataTable = false;
+            return this;
+        }
+
+        public Builder<T> plotIndex(int plotIndex) {
+            this.plotIndex = plotIndex;
             return this;
         }
 
