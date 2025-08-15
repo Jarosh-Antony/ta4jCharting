@@ -11,18 +11,18 @@ import java.util.Date;
 
 public class IndicatorToTimeSeriesConverterImpl implements IndicatorToTimeSeriesConverter {
 
-	@Override
-	public TimeSeriesCollection convert(Indicator<?> indicator, String name) {
-		final TimeSeriesCollection collection = new TimeSeriesCollection();
-		final TimeSeries timeSeries = new TimeSeries(name);
-		final BarSeries barSeries = indicator.getBarSeries();
-		for(int i = barSeries.getBeginIndex(); i <= barSeries.getEndIndex(); i++) {
-			final Bar bar = barSeries.getBar(i);
-			final double value = extractDoubleValue(indicator, i);
-			final Second time = new Second(new Date(bar.getEndTime().toEpochSecond() * 1000));
-			timeSeries.add(time, value);
-		}
-		collection.addSeries(timeSeries);
-		return collection;
-	}
+    @Override
+    public TimeSeriesCollection convert(Indicator<?> indicator, String name) {
+        final TimeSeriesCollection collection = new TimeSeriesCollection();
+        final TimeSeries timeSeries = new TimeSeries(name);
+        final BarSeries barSeries = indicator.getBarSeries();
+        for (int i = barSeries.getBeginIndex(); i <= barSeries.getEndIndex(); i++) {
+            final Bar bar = barSeries.getBar(i);
+            final double value = extractDoubleValue(indicator, i);
+            final Second time = new Second(new Date(bar.getEndTime().toEpochMilli()));
+            timeSeries.add(time, value);
+        }
+        collection.addSeries(timeSeries);
+        return collection;
+    }
 }

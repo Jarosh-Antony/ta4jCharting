@@ -2,7 +2,11 @@ package de.sjwimmer.ta4jchart.chartbuilder.toolbar;
 
 import de.sjwimmer.ta4jchart.chartbuilder.TacChart;
 import org.jfree.chart.JFreeChart;
-import org.jfree.chart.plot.*;
+import org.jfree.chart.plot.CombinedDomainXYPlot;
+import org.jfree.chart.plot.IntervalMarker;
+import org.jfree.chart.plot.Marker;
+import org.jfree.chart.plot.ValueMarker;
+import org.jfree.chart.plot.XYPlot;
 import org.jfree.chart.ui.Layer;
 import org.jfree.chart.ui.RectangleAnchor;
 import org.jfree.chart.ui.TextAnchor;
@@ -53,37 +57,37 @@ public class TacShowBuySellSignals extends JToggleButton implements ActionListen
 
     @Override
     public void actionPerformed(ActionEvent e) {
-        if(isSelected()) {
+        if (isSelected()) {
             addBuySellSignals(tradingRecord, barSeries, chart);
         } else {
-            removeBuySellSignals(((XYPlot)((CombinedDomainXYPlot) chart.getPlot()).getSubplots().get(0)));
+            removeBuySellSignals(((XYPlot) ((CombinedDomainXYPlot) chart.getPlot()).getSubplots().getFirst()));
         }
         mainPanel.revalidate();
         mainPanel.repaint();
     }
 
     public void addBuySellSignals(TradingRecord tradingRecord, BarSeries barSeries, JFreeChart chart) {
-        if(tradingRecord.getLastExit() != null) {
-            final XYPlot mainPlot = ((XYPlot)((CombinedDomainXYPlot) chart.getPlot()).getSubplots().get(0));
+        if (tradingRecord.getLastExit() != null) {
+            final XYPlot mainPlot = ((XYPlot) ((CombinedDomainXYPlot) chart.getPlot()).getSubplots().getFirst());
             removeBuySellSignals(mainPlot);
-            for(Position trade: tradingRecord.getPositions()){
+            for (Position trade : tradingRecord.getPositions()) {
                 final int entryIndex = trade.getEntry().getIndex();
                 final int exitIndex = trade.getExit().getIndex();
                 final Bar entryBar = barSeries.getBar(entryIndex);
                 final Bar exitBar = barSeries.getBar(exitIndex);
                 final double profit = trade.getProfit().doubleValue();
-                final Color profitColor = profit > 0 ? Color.GREEN: Color.RED;
+                final Color profitColor = profit > 0 ? Color.GREEN : Color.RED;
                 final double entry = new Minute(Date.from(entryBar
-                        .getEndTime().toInstant())).getFirstMillisecond();
+                        .getEndTime())).getFirstMillisecond();
                 final double exit = new Minute(Date.from(
-                        exitBar.getEndTime().toInstant())).getFirstMillisecond();
+                        exitBar.getEndTime())).getFirstMillisecond();
 
                 mainPlot.addDomainMarker(createInValueMarker(entry));
                 mainPlot.addDomainMarker(createOutValueMarker(exit, profitColor));
                 mainPlot.addDomainMarker(createIntervalTextMarker(entry, exit, profitColor, profit));
                 mainPlot.addDomainMarker(createIntervalMarker(entry, exit, profitColor), Layer.BACKGROUND);
             }
-        } else{
+        } else {
             log.error("No closed trade in trading record!");
         }
 
@@ -102,7 +106,7 @@ public class TacShowBuySellSignals extends JToggleButton implements ActionListen
 
 
     private void removeMarkers(XYPlot plot, Collection<?> markers, Layer layer) {
-        if(markers != null){
+        if (markers != null) {
             for (Object markerObject : new ArrayList<>(markers)) {
                 if (markerObject instanceof Marker) {
                     plot.removeDomainMarker((Marker) markerObject, layer);
@@ -134,7 +138,7 @@ public class TacShowBuySellSignals extends JToggleButton implements ActionListen
     }
 
     private Marker createIntervalTextMarker(double entry, double exit, Color profitColor, double profit) {
-        IntervalMarker imarkerText = new IntervalMarker(entry, exit, new Color(0,0,0,0));
+        IntervalMarker imarkerText = new IntervalMarker(entry, exit, new Color(0, 0, 0, 0));
         imarkerText.setLabelFont(LABEL_FONT);
         imarkerText.setLabel(String.valueOf(profit));
         imarkerText.setLabelPaint(MARKER_COLOR);
