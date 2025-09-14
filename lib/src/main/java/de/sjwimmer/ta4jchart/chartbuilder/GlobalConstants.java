@@ -8,5 +8,5 @@ public class GlobalConstants {
 
     public static final DateFormatter DATE_FORMATTER = new DateFormatter(DateFormat.getDateInstance(DateFormat.SHORT));
 
-    public static final DateTimeFormatter DATE_TIME_FORMATTER = DateTimeFormatter.ISO_LOCAL_DATE;
+    public static final DateTimeFormatter DATE_TIME_FORMATTER = DateTimeFormatter.ISO_LOCAL_DATE_TIME;
 }
